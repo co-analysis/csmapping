@@ -14,6 +14,8 @@ library(geojsonio)
 library(sp)
 library(leaflet)
 library(DT)
+library(knitr)
+library(kableExtra)
 
 cs18_lad <- read_csv("https://www.nomisweb.co.uk/api/v01/dataset/NM_129_1.data.csv?geography=1820327937...1820328307&date=latest&department=0&national_identity=0&gender=0&full_part_time=0&ethnic_group=0&disability_status=0&wage_band=0&civil_service_grade=0&age_band=0&measures=20100")
 
@@ -64,11 +66,16 @@ The table below shows the data for all local authorities in the map, in addition
 
 ```{r table, echo=FALSE}
 
-datatable(lad_dt2, 
+datatable(lad_dt2,
+          rownames = FALSE,
           colnames = c("Local authority" = "name",
                        "Number" = "value",
                        "Percent of Total" = "pc"),
-          options = list(pageLength = 15)) %>% 
+          options =
+            list(pageLength = 15,
+                 initComplete = JS("function(settings, json) {",
+                                   "$('.datatables').css({'font-family': 'sans-serif'});",
+                                   "}"))) %>%
   formatPercentage("Percent of Total", 1)
 
 ```
