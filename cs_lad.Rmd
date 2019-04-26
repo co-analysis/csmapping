@@ -49,7 +49,9 @@ leaflet(lad_leaf) %>%
               weight = 2,
               fillColor = ~bincol(value),
               popup = ~paste(name, value, sep = ": "),
-              fillOpacity = 0.8)
+              fillOpacity = 0.8) %>%
+  addLegend(position = "bottomleft", pal = bincol, values = ~value, 
+            title = "Number of civil servants")
 
 ```
 

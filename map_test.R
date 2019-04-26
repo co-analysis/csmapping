@@ -15,8 +15,6 @@ lad_dt <- cs18_lad %>%
 
 lad_leaf <- sp::merge(spdf_lad, lad_dt, by.x = "lad19cd", by.y = "geo_id")
 
-quantcol <- colorQuantile("Purples", lad_dt$value, n = 7, na.color = NA)
-
 bincol <- colorBin("Purples",
                    lad_dt$value,
                    bins = c(0, 500, 2500, 10000, 40000, 50000),
@@ -30,4 +28,6 @@ leaflet(lad_leaf) %>%
               weight = 2,
               fillColor = ~bincol(value),
               popup = ~paste(name, value, sep = ": "),
-              fillOpacity = 0.8)
+              fillOpacity = 0.8) %>%
+  addLegend(position = "bottomleft", pal = bincol, values = ~value,
+            title = "Number of civil servants")
