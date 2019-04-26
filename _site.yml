@@ -1,5 +1,6 @@
 output_dir: docs
 navbar:
+  logo: "icon.svg"
   homepage: "https://mattkerlogue.github.io/csmapping/cs_lad.html"
   service_name: "Mapping the UK Civil Service"
 output:
