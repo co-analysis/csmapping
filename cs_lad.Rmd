@@ -1,0 +1,73 @@
+---
+title: "UK Civil Servants by local authority (2018)"
+output: 
+  rmdformats::html_clean
+---
+
+```{r setup, include=FALSE}
+
+library(tidyverse)
+library(geojsonio)
+library(sp)
+library(leaflet)
+library(DT)
+
+cs18_lad <- read_csv("https://www.nomisweb.co.uk/api/v01/dataset/NM_129_1.data.csv?geography=1820327937...1820328307&date=latest&department=0&national_identity=0&gender=0&full_part_time=0&ethnic_group=0&disability_status=0&wage_band=0&civil_service_grade=0&age_band=0&measures=20100")
+
+spdf_lad <- geojson_read("https://opendata.arcgis.com/datasets/bbb0e58b0be64cc1a1460aa69e33678f_0.geojson", what = "sp")
+
+lad_dt <- cs18_lad %>%
+  select(geo_id = GEOGRAPHY_CODE, name = GEOGRAPHY_NAME, value = OBS_VALUE) %>%
+  mutate(pc = formattable::percent(
+    value/430080)) %>%
+  drop_na(pc)
+
+lad_leaf <- sp::merge(spdf_lad, lad_dt, by.x = "lad19cd", by.y = "geo_id")
+
+lad_dt2 <- lad_dt %>%
+  select(name, value, pc) %>%
+  mutate(pc = formattable::percent(pc, 1)) %>%
+  arrange(desc(value))
+
+bincol <- colorBin("Purples",
+                   lad_dt$value,
+                   bins = c(0, 500, 2500, 10000, 40000, 50000),
+                   pretty = FALSE,
+                   na.color = NA)
+
+```
+
+This document maps UK civil servants in England, Scotland and Wales by local authority (district and unitary authorities) as at 31 March 2018.
+
+Data is available for 369 local authorities in England, Scotland and Wales, data for UK civil servants in Northern Ireland is not avilable. Figures are rounded to the nearest 10.
+
+```{r map, echo=FALSE}
+
+leaflet(lad_leaf) %>%
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  addPolygons(color = "#ffffff",
+              weight = 2,
+              fillColor = ~bincol(value),
+              popup = ~paste(name, value, sep = ": "),
+              fillOpacity = 0.8)
+
+```
+
+## Table
+The table below shows the data for all local authorities in the map, in addition to the number of civil servants it also shows this number as a percentage of all UK Civil Servants. There are a further 3,540 UK civil servants working in Northern Ireland, and a further 7,440 who work overseas or whose working location is not known.
+
+```{r table, echo=FALSE}
+
+datatable(lad_dt2, 
+          colnames = c("Local authority" = "name",
+                       "Number" = "value",
+                       "Percent of Total" = "pc"),
+          options = list(pageLength = 15)) %>% 
+  formatPercentage("Percent of Total", 1)
+
+```
+
+## About
+UK civil servants are those civil servants working either for organisations of the UK Government, the Scottish Government or the Welsh Government. Most civil servants in Northern Ireland work for the Northern Irish Civil Service, which is a separate legal civil service.
+
+The data for this map and table comes from the Annual Civil Service Employment Survey 2018, provided via the [NOMIS API](https://www.nomisweb.co.uk/). This document is rendered in RMarkdown using [`leaflet`](https://rstudio.github.io/leaflet/) and [`DataTables`](https://rstudio.github.io/DT/).
