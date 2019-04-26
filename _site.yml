@@ -1,10 +1,9 @@
 output_dir: docs
 navbar:
-  title: ""
   homepage: "https://mattkerlogue.github.io/csmapping/cs_lad.html"
   service_name: "Mapping the UK Civil Service"
 output:
   govdown::govdown_document:
     font: "sans-serif"
     phase: alpha
-
+    feedback_url: "https://github.com/mattkerlogue/csmapping/issues"
