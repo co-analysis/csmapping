@@ -48,7 +48,7 @@ Data is available for 369 local authorities in England, Scotland and Wales, data
 
 ```{r map, echo=FALSE}
 
-leaflet(lad_leaf, width = 960, height = 500) %>%
+leaflet(lad_leaf, width = "100%", height = 500) %>%
   addProviderTiles(providers$CartoDB.Positron) %>%
   addPolygons(color = "#ffffff",
               weight = 2,
