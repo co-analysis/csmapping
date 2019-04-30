@@ -1,10 +1,17 @@
 ---
-title: "UK Civil Servants by local authority (2018)"
-author: Matt Kerlogue
-date: 26 April 2019
 output: 
   govdown::govdown_document:
     font: "sans-serif"
+    favicon: "none"
+    logo: "icon.svg"
+    logo_url: "https://mattkerlogue.github.io/csmapping"
+    logo_text: ""
+    page_title: "UK Civil Servants by local authority (2018)"
+    title: "Mapping civil servants"
+    phase: alpha
+    feedback_url: "https://mattkerlogue.github.io/csmapping/issues"
+    google_analytics: ""
+    
 ---
 
 ```{r setup, include=FALSE}
@@ -24,8 +31,7 @@ spdf_lad <- geojson_read("https://opendata.arcgis.com/datasets/bbb0e58b0be64cc1a
 lad_dt <- cs18_lad %>%
   select(geo_id = GEOGRAPHY_CODE, name = GEOGRAPHY_NAME, value = OBS_VALUE) %>%
   mutate(pc = formattable::percent(
-    value/430080)) %>%
-  drop_na(pc)
+    value/430080))
 
 lad_leaf <- sp::merge(spdf_lad, lad_dt, by.x = "lad19cd", by.y = "geo_id")
 
@@ -41,6 +47,8 @@ bincol <- colorBin("Purples",
                    na.color = NA)
 
 ```
+
+# UK Civil Servants by local authority (2018)
 
 ::: {.lead-para}
 This page provides details of UK civil servants in England, Scotland and Wales by local authority (district and unitary authorities) as at 31 March 2018.
@@ -85,4 +93,4 @@ datatable(lad_dt2,
 ### About
 UK civil servants are those civil servants working either for organisations of the UK Government, the Scottish Government or the Welsh Government. Most civil servants in Northern Ireland work for the Northern Irish Civil Service, which is a separate legal civil service.
 
-The data for this map and table comes from the Annual Civil Service Employment Survey 2018, provided via the [NOMIS API](https://www.nomisweb.co.uk/). The shape files are from the ONS's [OpenGeography Portal](http://geoportal.statistics.gov.uk). This document is rendered in RMarkdown using [`leaflet`](https://rstudio.github.io/leaflet/) and [`DataTables`](https://rstudio.github.io/DT/). The page is rendered using [`govdown`](https://ukgovdatascience.github.io/govdown/).
+The data for this map and table comes from the Annual Civil Service Employment Survey 2018, provided via the [NOMIS API](https://www.nomisweb.co.uk/). The shape files are from the ONS's [OpenGeography Portal](http://geoportal.statistics.gov.uk). This document is produced in RMarkdown using [`leaflet`](https://rstudio.github.io/leaflet/) and [`DT`](https://rstudio.github.io/DT/), and rendered using [`govdown`](https://ukgovdatascience.github.io/govdown/).
