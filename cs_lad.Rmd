@@ -10,7 +10,6 @@ output:
     title: "Mapping civil servants"
     phase: alpha
     feedback_url: "https://mattkerlogue.github.io/csmapping/issues"
-    google_analytics: ""
     
 ---
 
@@ -31,18 +30,14 @@ spdf_lad <- geojson_read("https://opendata.arcgis.com/datasets/bbb0e58b0be64cc1a
 lad_dt <- cs18_lad %>%
   select(geo_id = GEOGRAPHY_CODE, name = GEOGRAPHY_NAME, value = OBS_VALUE) %>%
   mutate(pc = formattable::percent(
-    value/430080))
+    value/430080),
+    value = formattable::comma(value))
 
 lad_leaf <- sp::merge(spdf_lad, lad_dt, by.x = "lad19cd", by.y = "geo_id")
 
-lad_dt2 <- lad_dt %>%
-  select(name, value, pc) %>%
-  mutate(pc = formattable::percent(pc, 1)) %>%
-  arrange(desc(value))
-
 bincol <- colorBin("Purples",
                    lad_dt$value,
-                   bins = c(0, 500, 2500, 10000, 40000, 50000),
+                   bins = c(0, 500, 1000, 2500, 5000, 7000, 40000, 50000),
                    pretty = FALSE,
                    na.color = NA)
 
@@ -59,14 +54,19 @@ Data is available for 369 local authorities in England, Scotland and Wales, data
 ```{r map, echo=FALSE}
 
 leaflet(lad_leaf, width = "100%", height = 500) %>%
-  addProviderTiles(providers$CartoDB.Positron) %>%
+  addProviderTiles(providers$CartoDB.PositronNoLabels) %>%
+  addMapPane("dt", zIndex = 410) %>%
+  addMapPane("labs", zIndex = 420) %>%
   addPolygons(color = "#ffffff",
               weight = 2,
               fillColor = ~bincol(value),
               popup = ~paste(name, value, sep = ": "),
-              fillOpacity = 0.8) %>%
-  addLegend(position = "bottomleft", pal = bincol, values = ~value, 
-            title = "Number of civil servants")
+              fillOpacity = 0.8,
+              options = pathOptions(pane = "dt")) %>%
+  addProviderTiles(providers$CartoDB.PositronOnlyLabels, 
+                   options = providerTileOptions(pane = "labs")) %>%
+  addLegend(position = "bottomleft", pal = bincol, values = ~lad_dt$value, 
+            title = "Number of civil servants", opacity = 0.8)
 
 ```
 
@@ -74,8 +74,11 @@ The table below shows the data for all local authorities in the map, in addition
 
 ```{r table, echo=FALSE}
 
+lad_dt2 <- lad_dt %>%
+  select(name, value, pc) %>%
+  arrange(desc(value))
+
 datatable(lad_dt2,
-          rownames = FALSE,
           colnames = c("Local authority" = "name",
                        "Number" = "value",
                        "Percent of Total" = "pc"),
@@ -84,6 +87,7 @@ datatable(lad_dt2,
                  initComplete = JS("function(settings, json) {",
                                    "$('.datatables').css({'font-family': 'sans-serif'});",
                                    "}"))) %>%
+  formatRound("Number", digits = 0) %>%
   formatPercentage("Percent of Total", 1)
 
 ```
@@ -93,4 +97,4 @@ datatable(lad_dt2,
 ### About
 UK civil servants are those civil servants working either for organisations of the UK Government, the Scottish Government or the Welsh Government. Most civil servants in Northern Ireland work for the Northern Irish Civil Service, which is a separate legal civil service.
 
-The data for this map and table comes from the Annual Civil Service Employment Survey 2018, provided via the [NOMIS API](https://www.nomisweb.co.uk/). The shape files are from the ONS's [OpenGeography Portal](http://geoportal.statistics.gov.uk). This document is produced in RMarkdown using [`leaflet`](https://rstudio.github.io/leaflet/) and [`DT`](https://rstudio.github.io/DT/), and rendered using [`govdown`](https://ukgovdatascience.github.io/govdown/).
+The data for this map and table comes from the ONS' Annual Civil Service Employment Survey 2018, provided via the [NOMIS API](https://www.nomisweb.co.uk/), the geographic shape files are from the ONS's [OpenGeography Portal](http://geoportal.statistics.gov.uk). This document is produced in [RMarkdown](http://rmarkdown.rstudio.com) using [`leaflet`](https://rstudio.github.io/leaflet/) and [`DT`](https://rstudio.github.io/DT/); it has been rendered into HTML using [`govdown`](https://ukgovdatascience.github.io/govdown/).
