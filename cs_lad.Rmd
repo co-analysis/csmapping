@@ -46,10 +46,15 @@ bincol <- colorBin("Purples",
 # UK Civil Servants by local authority (2018)
 
 ::: {.lead-para}
-This page provides details of UK civil servants in England, Scotland and Wales by local authority (district and unitary authorities) as at 31 March 2018.
+This page provides details of UK civil servants by local authority (district and unitary authorities) in England, Scotland and Wales, as at 31 March 2018.
 :::
 
-Data is available for 369 local authorities in England, Scotland and Wales, data for UK civil servants in Northern Ireland is not avilable. Figures are rounded to the nearest 10.
+The map shows the number of UK civil servants working in 369 local authorities in England, Scotland and Wales. There are 3,540 civil servants working in Northern Ireland for UK Civil Service organisations, where data is not available by local authority. There are also a further 7,440 UK civil servants who work overseas or whose working location is not known.
+
+The table shows the data for all 369 local authorities in the map, in addition to the number of civil servants in that local authority it also shows this number as a percentage of all UK Civil Servants.
+
+Figures are rounded to the nearest 10, data is supressed where figures less than five (including zero).
+
 
 ```{r map, echo=FALSE}
 
@@ -70,7 +75,6 @@ leaflet(lad_leaf, width = "100%", height = 500) %>%
 
 ```
 
-The table below shows the data for all local authorities in the map, in addition to the number of civil servants it also shows this number as a percentage of all UK Civil Servants. There are a further 3,540 UK civil servants working in Northern Ireland, and a further 7,440 who work overseas or whose working location is not known.
 
 ```{r table, echo=FALSE}
 
@@ -95,7 +99,11 @@ datatable(lad_dt2,
 
 ---
 
-### About
-UK civil servants are those civil servants working either for organisations of the UK Government, the Scottish Government or the Welsh Government. Most civil servants in Northern Ireland work for the Northern Irish Civil Service, which is a separate legal civil service.
+#### Who are UK civil servants?
+UK civil servants work for organisations in the [UK Civil Service](https://www.gov.uk/civil-service), supporting the UK Government, the Scottish Government and the Welsh Government (e.g. government departments, executive agencies or Crown Non-Departmental Public Bodies).
 
-The data for this map and table comes from the ONS' Annual Civil Service Employment Survey 2018, provided via the [NOMIS API](https://www.nomisweb.co.uk/), the geographic shape files are from the ONS's [OpenGeography Portal](http://geoportal.statistics.gov.uk). This document is produced in [RMarkdown](http://rmarkdown.rstudio.com) using [`leaflet`](https://rstudio.github.io/leaflet/) and [`DT`](https://rstudio.github.io/DT/); it has been rendered into HTML using [`govdown`](https://ukgovdatascience.github.io/govdown/).
+#### What about civil servants in Northern Ireland?
+There are 3,540 UK civil servants who work in Northern Ireland. However, most civil servants in Northern Ireland work for the [Northern Ireland Civil Service (NICS)](https://www.finance-ni.gov.uk/topics/working-northern-ireland-civil-service), a separate entity from the UK Civil Service. Statistics about the NICS are available from the [Northern Ireland Statistics and Research Agency (NISRA)](https://www.nisra.gov.uk/statistics/government/ni-civil-service-human-resource-statistics).
+
+#### About this analysis
+The data for the map and table comes from the Office for National Statistics' Annual Civil Service Employment Survey 2018, provided via the [NOMIS API](https://www.nomisweb.co.uk/), the geographic shape files are from the ONS's [OpenGeography Portal](http://geoportal.statistics.gov.uk). This document is produced in [RMarkdown](http://rmarkdown.rstudio.com) using [`leaflet`](https://rstudio.github.io/leaflet/) and [`DT`](https://rstudio.github.io/DT/); it has been rendered into HTML using [`govdown`](https://ukgovdatascience.github.io/govdown/).
