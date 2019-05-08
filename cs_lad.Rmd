@@ -2,9 +2,9 @@
 output: 
   govdown::govdown_document:
     font: "sans-serif"
-    favicon: "none"
-    logo: "icon.svg"
-    logo_url: "#"
+    favicon: "custom"
+    logo: "images/uk_white_on_transparent.svg"
+    logo_url: "https://co-analysis.github.io/csmapping/cs_lad.html"
     logo_text: ""
     page_title: "UK Civil Servants by local authority (2018)"
     title: "Mapping civil servants"
