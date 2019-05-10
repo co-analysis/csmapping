@@ -7,7 +7,7 @@ output:
     logo_url: "https://co-analysis.github.io/csmapping/cs_lad.html"
     logo_text: ""
     page_title: "UK Civil Servants by local authority (2018)"
-    title: "Mapping civil servants"
+    title: "Mapping the UK Civil Service"
     phase: alpha
     feedback_url: "https://www.github.com/co-analysis/csmapping/issues"
     google_analytics: "UA-139844526-1"
