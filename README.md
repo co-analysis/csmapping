@@ -5,7 +5,8 @@ This repo is an R project that uses the [NOMIS API](https://www.nomisweb.co.uk/)
 
 #### Catalogue of maps:
 
-* [UK Civil Servants by local authority](https://co-analysis.github.io/csmapping/cs_lad.html)
+* [UK Civil Servants by local authority 2018](https://co-analysis.github.io/csmapping/cs_lad_2018.html)
+* [UK Civil Servants by local authority 2019](https://co-analysis.github.io/csmapping/cs_lad_2019.html)
 
 ---
 

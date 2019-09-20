@@ -6,7 +6,7 @@ output:
     logo: "images/uk_white_on_transparent.svg"
     logo_url: "https://co-analysis.github.io/csmapping/cs_lad.html"
     logo_text: ""
-    page_title: "UK Civil Servants by local authority (2018)"
+    page_title: "UK civil servants by local authority (2018)"
     title: "Mapping the UK Civil Service"
     phase: alpha
     feedback_url: "https://www.github.com/co-analysis/csmapping/issues"
@@ -44,7 +44,7 @@ bincol <- colorBin("Purples",
 
 ```
 
-# UK Civil Servants by local authority (2018)
+# UK civil servants by local authority (2018)
 
 ::: {.lead-para}
 This page provides analysis of UK civil servants by local authority (district and unitary authorities) in England, Scotland and Wales, as at 31 March 2018.
