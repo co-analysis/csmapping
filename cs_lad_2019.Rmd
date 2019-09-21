@@ -79,32 +79,48 @@ cities_spdf <- nuts3_spdf[nuts3_spdf$nuts318cd %in% core_cities,]
 leaf_dt <- sp::merge(nuts3_spdf, cs_nuts3, by.x = "nuts318cd", by.y = "NUTS318CD")
 
 # create colouring function
-bincol <- colorBin("Purples",
-                   leaf_dt$value,
+bincol <- colorBin(palette = "YlGnBu",
+                   domain = leaf_dt$value,
                    bins = c(0, 500, 1000, 2500, 5000, 7000, 40000, 50000),
                    pretty = FALSE,
                    na.color = "#eeeeee")
+
+numcol <- colorNumeric(palette = "GnBu", domain = log10(leaf_dt$value), na.color = "#eeeeee")
 
 ```
 
 # UK civil servants by local area (2019)
 
 ::: {.lead-para}
-This page provides analysis of UK civil service headcount by local area (NUTS3 areas), as at 31 March 2019.
+This page provides a map and tables of UK civil service headcount by local area (NUTS3 areas), as at 31 March 2019.
 :::
 
-The map shows the number of UK civil servants by the local area (NUTS3 areas) of their main work location. There are also a further 7,920 civil servants who work overseas or whose working location is not known. The map uses NUTS3 regions which are large local authorities or groups of local authorities. There are 181 NUTS3 areas in the UK and figures have been rounded to the nearest 10, three of these regions (Fermanagh and Omagh, Mid and East Antrim, and Mid Ulster) either have no or a very small number of civil servants working in them and so their data has been supressed. This data does not include civil servants that work for the Northern Ireland Civil Service.
 
-## Summary
-Westminister has the largest single number of civil servants working in it, with a headcount of 47,430 (or 10.6% of the whole UK Civil Service). The rest of London is home to a further 41,670 civil servants, meaning 89,100 civil servants overall work in the capital (20.0% of the whole UK Civil Service). 
+### Summary
+Westminister has the largest single number of civil servants working in it, with a headcount of 47,430 (or 10.6% of the whole UK Civil Service). The rest of London is home to a further 41,670 civil servants, meaning 89,100 civil servants in total work in the capital (20.0% of the whole UK Civil Service). 
 
 Ten cities around the UK have formed the [Core Cities group](https://www.corecities.com/cities), they are home to around 19 million people and more than a quarter of the UK's economic activity. Some 101,620 civil servants work in the local areas covering one of these 10 core cities (22.8% of the whole UK Civil Service). Many more civil servants work in a local area adjacent to one of these core cities. On the map you are able to highlight these areas and London.
 
+::: {.details summary="More info"}
+The analysis in this map is based on the 2019 Civil Service Statistics figures on headcount by NUTS3 area (Table 15), there are 181 NUTS3 areas in the United Kingdom.
+
+NUTS is the Nomenclature of Territorial Units for Statistics, it has three levels and is designed to provide geographical aggregations of administrative districts/entities with similar population sizes to aid comparison and analysis.
+
+NUTS1 is divided into Scotland, Wales, Northern Ireland the regions of England. NUTS2 and NUTS 3 are divided into groups of local authorities, NUTS3 includes individual local authorities if they have large populations.
+
+Figures in this analysis have been rounded to the nearest 10. Three of the NUTS3 areas (Fermanagh and Omagh, Mid and East Antrim, and Mid Ulster) either have no or a very small number of civil servants working in them and so their data has been supressed. This data does not include civil servants that work for the Northern Ireland Civil Service.
+
+:::
+
+---
+
 ## Map
 
-```{r map, echo=FALSE}
+The map shows the number of UK civil servants by the local area (NUTS3 areas) of their main work location. There are also a further 7,920 civil servants who work overseas or whose working location is not known.
 
-leaflet(leaf_dt, width = "100%", height = 500) %>%
+```{r map, echo=FALSE, warning=FALSE}
+
+leaflet(leaf_dt, width = "100%", height = 600) %>%
   addProviderTiles(providers$CartoDB.PositronNoLabels) %>%
   addMapPane("dt", zIndex = 410) %>%
   addMapPane("labs", zIndex = 420) %>%
@@ -137,26 +153,29 @@ leaflet(leaf_dt, width = "100%", height = 500) %>%
               options = pathOptions(pane = "dt")) %>%
   addProviderTiles(providers$CartoDB.PositronOnlyLabels, 
                    options = providerTileOptions(pane = "labs")) %>%
-  addLegend(position = "bottomleft", pal = bincol, values = ~leaf_dt$value, 
-            title = "Number of civil servants", opacity = 0.8) %>%
+  addLegend(position = "topright", pal = bincol, values = ~leaf_dt$value, 
+            title = "Headcount", opacity = 0.8) %>%
   addLayersControl(
-    overlayGroups = c("London", "Core Cities"),
+    overlayGroups = c("London", "Core Cities"), position = "bottomright",
     options = layersControlOptions(collapsed = FALSE)
   ) %>%
   hideGroup(c("London", "Core Cities"))
 
 ```
 
+---
+
 ## Tables
+
+The following tabs provide tables of Civil Service headcount by all NUTS3 area, by country/region (NUTS1 area) and for the local areas covering the 10 core cities.
 
 ::: {.tabset}
 
-## All local areas
+## All areas
 
 This table provides the Civil Service headcount and percent of headcount for all 181 NUTS3 areas. The group column indicates the NUTS3 areas that are part of the Core Cities group, and for all other areas provides the UK country or English statistical region they are part of.
 
-
-```{r table, echo=FALSE}
+```{r table, echo=FALSE, message=FALSE, warning=FALSE}
 
 # create display table dataset
 table_dt <- cs_nuts3 %>%
@@ -200,11 +219,12 @@ datatable(table_dt,
 
 ```
 
+
 ## Regions
 
 This table provides overall civil service headcount figures by UK country or region, with the Core Cities group presented as a separate group (i.e. figures for Manchester or Glasgow do not count towards the totals for North West England or Scotland). 
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r regions, echo=FALSE, message=FALSE, warning=FALSE}
 
 table_dt %>% 
   group_by(group) %>% 
@@ -223,7 +243,7 @@ table_dt %>%
 
 This table provides overall civil service headcount figures for the NUTS3 areas that cover the 10 Core Cities. Greater Manchester is presented in this table as a single figure, but is actually covered by 5 NUTS3 areas, the city of Manchester itself accounts for 7,550 while a further 10,340 work in the rest of Greater Manchester.
 
-```{r echo=FALSE}
+```{r corecities, echo=FALSE, message=FALSE, warning=FALSE}
 
 table_dt %>% 
   filter(group == "Core Cities") %>%
@@ -243,7 +263,10 @@ table_dt %>%
 
 :::
 
+
 ---
+
+## About
 
 #### Who are UK civil servants?
 UK civil servants work for organisations in the [UK Civil Service](https://www.gov.uk/civil-service), supporting the UK Government, the Scottish Government and the Welsh Government (e.g. government departments, executive agencies or Crown Non-Departmental Public Bodies).
@@ -251,5 +274,5 @@ UK civil servants work for organisations in the [UK Civil Service](https://www.g
 #### What about civil servants in Northern Ireland?
 There are 3,670 UK civil servants who work in Northern Ireland. However, most civil servants in Northern Ireland work for the [Northern Ireland Civil Service (NICS)](https://www.finance-ni.gov.uk/topics/working-northern-ireland-civil-service), a separate entity from the UK Civil Service. Statistics about the NICS are available from the [Northern Ireland Statistics and Research Agency (NISRA)](https://www.nisra.gov.uk/statistics/government/ni-civil-service-human-resource-statistics).
 
-#### About this analysis
-The data for the map and table comes from the [Annual Civil Service Employment Survey (ACSES)](https://www.gov.uk/government/collections/civil-service-statistics), the geographic shape files are from the ONS's [OpenGeography Portal](http://geoportal.statistics.gov.uk). The NUTS3 area a civil servant works in is defined in reference to the postcode of their main working location recorded in Civil Service HR systems. This document is produced in [RMarkdown](http://rmarkdown.rstudio.com) using [`leaflet`](https://rstudio.github.io/leaflet/) and [`DT`](https://rstudio.github.io/DT/); it has been rendered into HTML using [`govdown`](https://ukgovdatascience.github.io/govdown/).
+#### Data sources and software packages
+The data for the map and table comes from the [Civil Service Statistics 2019](https://www.gov.uk/government/collections/civil-service-statistics), the geographic shape files are from the ONS's [OpenGeography Portal](http://geoportal.statistics.gov.uk). The NUTS3 area a civil servant works in is defined in reference to the postcode of their main working location recorded in Civil Service HR systems. This document is produced in [RMarkdown](http://rmarkdown.rstudio.com) using [`leaflet`](https://rstudio.github.io/leaflet/) and [`DT`](https://rstudio.github.io/DT/); it has been rendered into HTML using [`govdown`](https://ukgovdatascience.github.io/govdown/).
