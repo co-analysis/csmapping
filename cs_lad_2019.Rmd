@@ -97,11 +97,18 @@ This page provides a map and tables of UK civil service headcount by local area 
 
 
 ### Summary
-Westminister has the largest single number of civil servants working in it, with a headcount of 47,430 (or 10.6% of the whole UK Civil Service). The rest of London is home to a further 41,670 civil servants, meaning 89,100 civil servants in total work in the capital (20.0% of the whole UK Civil Service). 
+Westminister has the largest single number of civil servants working in it, with a headcount of 47,430 (or 10.6% of the whole UK Civil Service). The rest of London is home to a further 41,670 civil servants, meaning 89,100 civil servants in total work in the capital (20.0% of the whole UK Civil Service). Outside of Westminster the largest numbers of civil servants elswhere in London are found in Croydon (8,280), Camden and the City of London (5,930), and Tower Hamlets (5,060).
 
 Ten cities around the UK have formed the [Core Cities group](https://www.corecities.com/cities), they are home to around 19 million people and more than a quarter of the UK's economic activity. Some 101,620 civil servants work in the local areas covering one of these 10 core cities (22.8% of the whole UK Civil Service). Many more civil servants work in a local area adjacent to one of these core cities. On the map you are able to highlight these areas and London.
 
-::: {.details summary="More info"}
+In addition to the Core Cities there is also a sizeable Civil Service presence (8,000+) in three other areas:
+
+* In the area surrounding Bristol there are 11,790 civil servants, most of whom work for the Ministry of Defence or one of its agencies.
+* Edinburgh has 10,400 civil servants, most of whom work for the Scottish Government and its agencies.
+* Swansea has 8,730 civil servants, most of whom work for the Driver and Vehicle Licensing Agency.
+
+
+::: {.details summary="Details"}
 The analysis in this map is based on the 2019 Civil Service Statistics figures on headcount by NUTS3 area (Table 15), there are 181 NUTS3 areas in the United Kingdom.
 
 NUTS is the Nomenclature of Territorial Units for Statistics, it has three levels and is designed to provide geographical aggregations of administrative districts/entities with similar population sizes to aid comparison and analysis.
@@ -197,7 +204,7 @@ table_dt <- cs_nuts3 %>%
     str_detect(NUTS318CD, "UKN.*") ~ "Northern Ireland",
     TRUE ~ NA_character_
   ),
-  group = as_factor(group)) %>%
+  group = fct_explicit_na(as_factor(group))) %>%
   select(-NUTS318CD) %>%
   arrange(desc(value))
 
