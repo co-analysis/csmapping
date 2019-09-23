@@ -85,8 +85,6 @@ bincol <- colorBin(palette = "YlGnBu",
                    pretty = FALSE,
                    na.color = "#eeeeee")
 
-numcol <- colorNumeric(palette = "GnBu", domain = log10(leaf_dt$value), na.color = "#eeeeee")
-
 ```
 
 # UK civil servants by local area (2019)
@@ -97,7 +95,7 @@ This page provides a map and tables of UK civil service headcount by local area 
 
 
 ### Summary
-As of 31 March 2019, there were 445,480 civil servants working for the UK Civil Service &emdash; but only 20% of them work in London, this page provides an interactive map and tables showing how many civil servant across different parts of the UK.
+As of 31 March 2019, there were 445,480 civil servants working for the UK Civil Service &mdash; but only 20% of them work in London, this page provides an interactive map and tables showing how many civil servants work in different locations across the UK.
 
 Westminister has the largest single number of civil servants working in it, with a headcount of 47,430 (or 10.6% of the whole UK Civil Service). The rest of London is home to a further 41,670 civil servants, meaning 89,100 civil servants in total work in the capital (20.0% of the whole UK Civil Service). Outside of Westminster the largest numbers of civil servants elswhere in London are found in Croydon (8,280), Camden and the City of London (5,930), and Tower Hamlets (5,060).
 
