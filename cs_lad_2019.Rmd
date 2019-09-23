@@ -97,6 +97,8 @@ This page provides a map and tables of UK civil service headcount by local area 
 
 
 ### Summary
+As of 31 March 2019, there were 445,480 civil servants working for the UK Civil Service &emdash; but only 20% of them work in London, this page provides an interactive map and tables showing how many civil servant across different parts of the UK.
+
 Westminister has the largest single number of civil servants working in it, with a headcount of 47,430 (or 10.6% of the whole UK Civil Service). The rest of London is home to a further 41,670 civil servants, meaning 89,100 civil servants in total work in the capital (20.0% of the whole UK Civil Service). Outside of Westminster the largest numbers of civil servants elswhere in London are found in Croydon (8,280), Camden and the City of London (5,930), and Tower Hamlets (5,060).
 
 Ten cities around the UK have formed the [Core Cities group](https://www.corecities.com/cities), they are home to around 19 million people and more than a quarter of the UK's economic activity. Some 101,620 civil servants work in the local areas covering one of these 10 core cities (22.8% of the whole UK Civil Service). Many more civil servants work in a local area adjacent to one of these core cities. On the map you are able to highlight these areas and London.
@@ -169,6 +171,10 @@ leaflet(leaf_dt, width = "100%", height = 600) %>%
   hideGroup(c("London", "Core Cities"))
 
 ```
+
+::: {.small-para}
+A static version is also available for [download  (PDF, 265KB)](cs_location_2019_map.pdf).
+:::
 
 ---
 
