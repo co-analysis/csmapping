@@ -51,7 +51,7 @@ nuts3_codes <- geojson_read(urls$nuts3_codes, parse = TRUE) %>%
 cs_nuts3 <- cs19_t15 %>%
   filter(category_1 != "All employees", category_2 == "All employees", category_4 == "Total") %>%
   group_by(category_1) %>%
-  summarise_at(vars(value), sum) %>%
+  summarise_at(vars(value), sum, na.rm = TRUE) %>%
   rename(NUTS318NM = category_1) %>%
   full_join(nuts3_codes) %>%
   mutate(pc = formattable::percent(
@@ -206,6 +206,8 @@ table_dt <- cs_nuts3 %>%
     str_detect(NUTS318CD, "UKL.*") ~ "Wales",
     str_detect(NUTS318CD, "UKM.*") ~ "Scotland",
     str_detect(NUTS318CD, "UKN.*") ~ "Northern Ireland",
+    str_detect(NUTS318NM, "Not reported") ~ "Not reported",
+    str_detect(NUTS318NM, "Overseas") ~ "Overseas",
     TRUE ~ NA_character_
   ),
   group = fct_explicit_na(as_factor(group))) %>%
