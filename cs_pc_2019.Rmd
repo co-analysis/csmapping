@@ -1,0 +1,109 @@
+---
+output: 
+  govdown::govdown_document:
+    font: "sans-serif"
+    favicon: "custom"
+    logo: "images/uk_white_on_transparent.svg"
+    logo_url: "https://co-analysis.github.io/csmapping/cs_lad_2019.html"
+    logo_text: ""
+    page_title: "UK civil servants by postcode (2019)"
+    title: "Mapping the UK Civil Service"
+    phase: alpha
+    feedback_url: "https://www.github.com/co-analysis/csmapping/issues"
+    google_analytics: "UA-139844526-1"
+    
+---
+
+```{r setup, include=FALSE}
+
+# load packages
+library(tidyverse)
+library(geojsonio)
+library(sf)
+library(leaflet)
+library(DT)
+library(knitr)
+library(crosstalk)
+
+# urls for downloading assets
+urls <- list(
+  cs19pc = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/837270/Civil-servants-by-postcode-organisation-grade-and-leaving-cause__1__-_Staff_in_Post.csv",
+  ons_lad = "https://opendata.arcgis.com/datasets/c3ddcd23a15c4d7985d8b36f1344b1db_0.geojson"
+)
+
+# read in civil service stats and filter to table 15
+cs19pc <- read_csv(urls$cs19pc, 
+                   skip = 8, 
+                   col_names = c("organisation", "postcode", "aoaa", "eo", 
+                                 "seoheo", "g6g7", "scs", "unknown", "total"), 
+                   na = "..")
+
+cs19pc_clean <- cs19pc %>%
+  select(organisation, postcode, total) %>%
+  drop_na(total) %>%
+  arrange(organisation) %>%
+  mutate(organisation = as_factor(organisation))
+
+onspd_slim <- vroom::vroom("onspd_slim_201908.csv")
+
+ons_lad <- geojsonio::geojson_read(urls$ons_lad, parse = TRUE)
+
+ons_lad_dt <- ons_lad$features$properties 
+
+ons_lad_dt <- ons_lad_dt %>% select(local_authority = LAD19NM, oslaua = LAD19CD)
+
+onspd_slim2 <- onspd_slim %>%
+  select(pcds, oslaua, lat, long) %>%
+  mutate(postcode = str_remove(pcds, "\\s")) %>%
+  filter(postcode %in% cs19pc_clean$postcode)
+
+cs19pc_merged <- cs19pc_clean %>%
+  left_join(onspd_slim2, by = c("postcode" = "postcode")) %>%
+  drop_na(oslaua) %>%
+  left_join(ons_lad_dt) %>%
+  arrange(desc(total))
+
+cs19pc_sf <- st_as_sf(cs19pc_merged, coords = c("long", "lat"))
+
+sd_cs19pc <- SharedData$new(cs19pc_sf)
+
+```
+
+# UK civil servants by postcode and organisation (2019)
+
+::: {.lead-para}
+This page provides a map and tables of UK civil service headcount by postcode and organisation, as at 31 March 2019.
+:::
+
+For full details about the locations that civil servants work in please see [Civil Servants by local authority](cs_lad_2019.html).
+
+The map below expands on this analysis by looking at the distribution of civil servants by postcode and organisation. Each circle on the map represents a group of civil servants working for a government department or executive agency in a particular postcode. The size of the circle is proportionate to the headcount of civil servants working in that organisation and postcode.
+
+You can select local authorities of interest (note due to technical limitations you will need to zoom-in manually to your selection).
+
+---
+
+
+```{r select, echo=FALSE, warning=FALSE}
+
+filter_select("select_la", "Local authority", sharedData = sd_cs19pc, 
+              group = ~local_authority, )
+
+```
+
+
+``` {r map, echo=FALSE, warning=FALSE}
+leaflet(sd_cs19pc, width = "100%", height = 600) %>%
+  addProviderTiles(providers$CartoDB.PositronNoLabels) %>%
+  addMapPane("dt", zIndex = 410) %>%
+  addMapPane("labs", zIndex = 420) %>%
+  addCircles(radius = ~sqrt(total)*100,
+             popup = ~paste(organisation, pcds, formattable::comma(total, digits = 0), sep = "; "),
+             weight = 2, fillColor = "#005abb", color = "#005abb", opacity = 0.6,
+             options = pathOptions(pane = "dt")) %>%
+  addProviderTiles(providers$CartoDB.PositronOnlyLabels, 
+                   options = providerTileOptions(pane = "labs"))
+
+```
+
+
