@@ -42,7 +42,33 @@ cs19pc_clean <- cs19pc %>%
   select(organisation, postcode, total) %>%
   drop_na(total) %>%
   arrange(organisation) %>%
-  mutate(organisation = as_factor(organisation))
+  mutate(gov_group = case_when(
+    organisation == "Accountant in Bankruptcy" ~ "SG",
+    organisation == "Crown Office and Procurator Fiscal Service" ~ "SG",
+    organisation == "Disclosure Scotland" ~ "SG",
+    organisation == "Education Scotland" ~ "SG",
+    organisation == "Food Standards Scotland" ~ "SG",
+    organisation == "National Records of Scotland" ~ "SG",
+    organisation == "Office of the Scottish Charity Regulator" ~ "SG",
+    organisation == "Registers of Scotland" ~ "SG",
+    organisation == "Revenue Scotland" ~ "SG",
+    organisation == "Scottish Courts and Tribunals Service" ~ "SG",
+    organisation == "Scottish Fiscal Commission" ~ "SG",
+    organisation == "Scottish Government (excl. agencies)" ~ "SG",
+    organisation == "Scottish Housing Regulator" ~ "SG",
+    organisation == "Scottish Prison Service" ~ "SG",
+    organisation == "Scottish Public Pensions Agency" ~ "SG",
+    organisation == "Social Security Scotland" ~ "SG",
+    organisation == "Student Awards Agency for Scotland" ~ "SG",
+    organisation == "Transport Scotland" ~ "SG",
+    organisation == "ESTYN" ~ "WG",
+    organisation == "Welsh Government" ~ "WG",
+    organisation == "Welsh Revenue Authority" ~ "WG",
+    TRUE ~ "UKG"),
+    gov_group = recode(gov_group, 
+                       "SG" = "Scottish Government", 
+                       "WG" = "Welsh Government",
+                       "UKG" = "UK Government"))
 
 onspd_slim <- vroom::vroom("onspd_slim_201908.csv")
 
@@ -75,25 +101,30 @@ sd_cs19pc <- SharedData$new(cs19pc_sf)
 This page provides a map and tables of UK civil service headcount by postcode and organisation, as at 31 March 2019.
 :::
 
-For full details about the locations that civil servants work in please see [Civil Servants by local authority](cs_lad_2019.html).
+::: {.warning}
+Please note this map is an experimental prototype and still in development. It is not an official publication of the Cabinet Office and does not represent government policy.
+:::
 
-The map below expands on this analysis by looking at the distribution of civil servants by postcode and organisation. Each circle on the map represents a group of civil servants working for a government department or executive agency in a particular postcode. The size of the circle is proportionate to the headcount of civil servants working in that organisation and postcode.
+
+For full details about the locations that civil servants work in please see [Civil Servants by local authority](cs_lad_2019.html). The map below expands on this analysis by looking at the distribution of civil servants by postcode and organisation.
+
+Each circle on the map represents a group of civil servants working for a government department or executive agency in a particular postcode. The size of the circle is proportionate to the headcount of civil servants working in that organisation and postcode, figures are rounded to the nearest 10.
 
 :::{.govuk-grid-row}
 
 :::{.govuk-grid-column-two-thirds}
-
+### Map
 ``` {r map, echo=FALSE, warning=FALSE}
-leaflet(sd_cs19pc, width = "100%", height = 600) %>%
+leaflet(sd_cs19pc, width = "100%", height = 650) %>%
   addProviderTiles(providers$CartoDB.PositronNoLabels) %>%
   addMapPane("dt", zIndex = 410) %>%
   addMapPane("labs", zIndex = 420) %>%
   addCircles(radius = ~sqrt(total)*100,
              popup = ~paste(organisation, pcds, formattable::comma(total, digits = 0), sep = "; "),
-             weight = 2, fillColor = "#005abb", color = "#005abb", opacity = 0.6,
+             weight = 1, fillColor = "#005abb", color = "#005abb", opacity = 0.5,
              options = pathOptions(pane = "dt")) %>%
   addProviderTiles(providers$CartoDB.PositronOnlyLabels, 
-                   options = providerTileOptions(pane = "labs"))
+                   options = providerTileOptions(pane = "labs", opacity = 0.8))
 
 ```
 
@@ -102,9 +133,10 @@ leaflet(sd_cs19pc, width = "100%", height = 600) %>%
 :::{.govuk-grid-column-one-third}
 
 ::: {.small-para}
+### Control panel
 You can select local authorities and/or organisations of interest. Note that due to technical limitations the map will not automatically zoom in to your selection.
 
-**Select local authorities:**
+#### Select local authorities
 ```{r select_la, echo=FALSE, warning=FALSE}
 
 fs_la <- filter_select(id = "select_la", label = "", sharedData = sd_cs19pc,
@@ -122,7 +154,7 @@ fs_la_nobootstrap
 ```
 
 
-**Select organisations:**
+#### Select organisation(s)
 ```{r select_org, echo=FALSE, warning=FALSE}
 
 fs_org <- filter_select(id = "select_org", label = "", sharedData = sd_cs19pc,
@@ -139,8 +171,43 @@ fs_org_nobootstrap
 
 ```
 
-:::
+#### Select government
+The UK Civil Service serves the UK Government, the Scottish Government and the Welsh Govermnet. Use the checkboxes below to toggle between the departments and agencies that work for these different administrations.
+```{r select_gov, echo=FALSE, warning=FALSE}
+
+fc_gov <- filter_checkbox(id = "check_group", label = "",
+                          sharedData = sd_cs19pc, group = ~gov_group,
+                          inline = FALSE)
+  
+fc_gov_nobootstrap <- fc_gov
+
+attr(fc_gov_nobootstrap, "html_dependencies") <- Filter(
+  function(dep) {dep$name != "bootstrap"},
+  attr(fc_gov_nobootstrap, "html_dependencies")
+)
+
+fc_gov_nobootstrap
+
+```
 
 :::
 
 :::
+
+:::
+
+---
+
+## About
+
+#### Who are UK civil servants?
+UK civil servants work for organisations in the [UK Civil Service](https://www.gov.uk/civil-service), supporting the UK Government, the Scottish Government and the Welsh Government (e.g. government departments, executive agencies or Crown Non-Departmental Public Bodies).
+
+#### What about civil servants in Northern Ireland?
+There are 3,670 UK civil servants who work in Northern Ireland. However, most civil servants in Northern Ireland work for the [Northern Ireland Civil Service (NICS)](https://www.finance-ni.gov.uk/topics/working-northern-ireland-civil-service), a separate entity from the UK Civil Service. Statistics about the NICS are available from the [Northern Ireland Statistics and Research Agency (NISRA)](https://www.nisra.gov.uk/statistics/government/ni-civil-service-human-resource-statistics).
+
+#### Data sources
+The data for the map and table comes from the Civil Service Statistics ad-hoc tables on [Civil Service by organisation, postcode, grade and leaving cause](https://www.gov.uk/government/statistics/civil-service-by-organisation-postcode-grade-and-leaving-cause), the geographic information on postcodes and the look up to local authorities comes from the ONS's [OpenGeography Portal](http://geoportal.statistics.gov.uk).
+
+#### Software packages
+This document is produced in [RMarkdown](http://rmarkdown.rstudio.com) using [`leaflet`](https://rstudio.github.io/leaflet/) and [`DT`](https://rstudio.github.io/DT/); it has been rendered into HTML using [`govdown`](https://ukgovdatascience.github.io/govdown/).
