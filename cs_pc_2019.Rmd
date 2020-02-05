@@ -81,16 +81,6 @@ The map below expands on this analysis by looking at the distribution of civil s
 
 You can select local authorities of interest (note due to technical limitations you will need to zoom-in manually to your selection).
 
----
-
-
-```{r select, echo=FALSE, warning=FALSE}
-
-filter_select("select_la", "Local authority", sharedData = sd_cs19pc, 
-              group = ~local_authority, )
-
-```
-
 
 ``` {r map, echo=FALSE, warning=FALSE}
 leaflet(sd_cs19pc, width = "100%", height = 600) %>%
@@ -103,6 +93,23 @@ leaflet(sd_cs19pc, width = "100%", height = 600) %>%
              options = pathOptions(pane = "dt")) %>%
   addProviderTiles(providers$CartoDB.PositronOnlyLabels, 
                    options = providerTileOptions(pane = "labs"))
+
+```
+
+**Select local authorities:**
+```{r select, echo=FALSE, warning=FALSE}
+
+fs <- filter_select(id = "select_la", label = "", sharedData = sd_cs19pc,
+              group = ~local_authority)
+
+fs_nobootstrap <- fs
+
+attr(fs_nobootstrap, "html_dependencies") <- Filter(
+  function(dep) {dep$name != "bootstrap"},
+  attr(fs_nobootstrap, "html_dependencies")
+)
+
+fs_nobootstrap
 
 ```
 
