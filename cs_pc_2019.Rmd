@@ -79,8 +79,11 @@ For full details about the locations that civil servants work in please see [Civ
 
 The map below expands on this analysis by looking at the distribution of civil servants by postcode and organisation. Each circle on the map represents a group of civil servants working for a government department or executive agency in a particular postcode. The size of the circle is proportionate to the headcount of civil servants working in that organisation and postcode.
 
-You can select local authorities of interest (note due to technical limitations you will need to zoom-in manually to your selection).
+You can select local authorities and/or organisations of interest. Note that due to technical limitations the map will not automatically zoom in to your selection.
 
+:::{.govuk-grid-row}
+
+:::{.govuk-grid-column-two-thirds}
 
 ``` {r map, echo=FALSE, warning=FALSE}
 leaflet(sd_cs19pc, width = "100%", height = 600) %>%
@@ -96,21 +99,45 @@ leaflet(sd_cs19pc, width = "100%", height = 600) %>%
 
 ```
 
-**Select local authorities:**
-```{r select, echo=FALSE, warning=FALSE}
+:::
 
-fs <- filter_select(id = "select_la", label = "", sharedData = sd_cs19pc,
+:::{.govuk-grid-column-one-third}
+
+**Select local authorities:**
+```{r select_la, echo=FALSE, warning=FALSE}
+
+fs_la <- filter_select(id = "select_la", label = "", sharedData = sd_cs19pc,
               group = ~local_authority)
 
-fs_nobootstrap <- fs
+fs_la_nobootstrap <- fs_la
 
-attr(fs_nobootstrap, "html_dependencies") <- Filter(
+attr(fs_la_nobootstrap, "html_dependencies") <- Filter(
   function(dep) {dep$name != "bootstrap"},
-  attr(fs_nobootstrap, "html_dependencies")
+  attr(fs_la_nobootstrap, "html_dependencies")
 )
 
-fs_nobootstrap
+fs_la_nobootstrap
 
 ```
 
 
+**Select organisations:**
+```{r select_org, echo=FALSE, warning=FALSE}
+
+fs_org <- filter_select(id = "select_org", label = "", sharedData = sd_cs19pc,
+              group = ~organisation)
+
+fs_org_nobootstrap <- fs_org
+
+attr(fs_org_nobootstrap, "html_dependencies") <- Filter(
+  function(dep) {dep$name != "bootstrap"},
+  attr(fs_org_nobootstrap, "html_dependencies")
+)
+
+fs_org_nobootstrap
+
+```
+
+:::
+
+:::
