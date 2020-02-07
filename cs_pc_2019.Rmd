@@ -172,7 +172,7 @@ fs_org_nobootstrap
 ```
 
 #### Select government
-The UK Civil Service serves the UK Government, the Scottish Government and the Welsh Govermnet. Use the checkboxes below to toggle between the departments and agencies that work for these different administrations.
+The UK Civil Service serves the UK Government, the Scottish Government and the Welsh Government. Use the checkboxes below to toggle between the departments and agencies that work for these different administrations.
 ```{r select_gov, echo=FALSE, warning=FALSE}
 
 fc_gov <- filter_checkbox(id = "check_group", label = "",
