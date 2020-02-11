@@ -1,17 +1,7 @@
 ---
 output: 
   govdown::govdown_document:
-    font: "sans-serif"
-    favicon: "custom"
-    logo: "images/uk_white_on_transparent.svg"
-    logo_url: "https://co-analysis.github.io/csmapping/cs_lad_2019.html"
-    logo_text: ""
     page_title: "UK civil servants by postcode (2019)"
-    title: "Mapping the UK Civil Service"
-    phase: alpha
-    feedback_url: "https://www.github.com/co-analysis/csmapping/issues"
-    google_analytics: "UA-139844526-1"
-    
 ---
 
 ```{r setup, include=FALSE}
