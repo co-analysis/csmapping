@@ -113,7 +113,7 @@ Each circle on the map represents a group of civil servants working for a govern
 :::{.govuk-grid-row}
 
 :::{.govuk-grid-column-two-thirds}
-### Map
+## Map
 ``` {r map, echo=FALSE, warning=FALSE}
 leaflet(sd_cs19pc, width = "100%", height = 650) %>%
   addProviderTiles(providers$CartoDB.PositronNoLabels) %>%
@@ -142,14 +142,7 @@ You can select local authorities and/or organisations of interest. Note that due
 fs_la <- filter_select(id = "select_la", label = "", sharedData = sd_cs19pc,
               group = ~local_authority)
 
-fs_la_nobootstrap <- fs_la
-
-attr(fs_la_nobootstrap, "html_dependencies") <- Filter(
-  function(dep) {dep$name != "bootstrap"},
-  attr(fs_la_nobootstrap, "html_dependencies")
-)
-
-fs_la_nobootstrap
+govdown:::unstrap(fs_la)
 
 ```
 
@@ -160,14 +153,7 @@ fs_la_nobootstrap
 fs_org <- filter_select(id = "select_org", label = "", sharedData = sd_cs19pc,
               group = ~organisation)
 
-fs_org_nobootstrap <- fs_org
-
-attr(fs_org_nobootstrap, "html_dependencies") <- Filter(
-  function(dep) {dep$name != "bootstrap"},
-  attr(fs_org_nobootstrap, "html_dependencies")
-)
-
-fs_org_nobootstrap
+govdown:::unstrap(fs_org)
 
 ```
 
@@ -178,15 +164,9 @@ The UK Civil Service serves the UK Government, the Scottish Government and the W
 fc_gov <- filter_checkbox(id = "check_group", label = "",
                           sharedData = sd_cs19pc, group = ~gov_group,
                           inline = FALSE)
-  
-fc_gov_nobootstrap <- fc_gov
 
-attr(fc_gov_nobootstrap, "html_dependencies") <- Filter(
-  function(dep) {dep$name != "bootstrap"},
-  attr(fc_gov_nobootstrap, "html_dependencies")
-)
+govdown:::unstrap(fc_gov)
 
-fc_gov_nobootstrap
 
 ```
 
