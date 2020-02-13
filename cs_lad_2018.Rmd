@@ -98,3 +98,4 @@ There are 3,540 UK civil servants who work in Northern Ireland. However, most ci
 
 #### About this analysis
 The data for the map and table comes from the [Annual Civil Service Employment Survey (ACSES)](https://www.gov.uk/government/collections/civil-service-statistics), provided via the [NOMIS API](https://www.nomisweb.co.uk/), the geographic shape files are from the ONS's [OpenGeography Portal](http://geoportal.statistics.gov.uk). The local authority a civil servant works in is defined in reference to the postcode of their main working location recorded in Civil Service HR systems. This document is produced in [RMarkdown](http://rmarkdown.rstudio.com) using [`leaflet`](https://rstudio.github.io/leaflet/) and [`DT`](https://rstudio.github.io/DT/); it has been rendered into HTML using [`govdown`](https://ukgovdatascience.github.io/govdown/).
+

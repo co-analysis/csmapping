@@ -18,8 +18,9 @@ This microsite provides maps of the UK Civil Service, based on data published th
 
 :::
 
+:::{.warning}
 Please note that while the data these maps are based on are Official Statistics, these maps and the analysis they contain are not an official publication of the Cabinet Office and do not represent government policy. They are for illustrative use only.
-
+:::
 
 :::{.accordion}
 ## 2019 maps
@@ -36,6 +37,7 @@ The following map is available from the 2018 Civil Service Statistics (accessed 
 :::
 
 ### About
-* The data used here comes from the [Civil Service Statistics](https://www.gov.uk/government/collections/civil-service-statistics) published by the [Cabinet Office](https://www.gov.uk/cabinet-office) (from 2019 onwards, previously ONS)
+* The data used in these maps comes from the [Civil Service Statistics](https://www.gov.uk/government/collections/civil-service-statistics) published by the [Cabinet Office](https://www.gov.uk/cabinet-office) (from 2019 onwards, previously ONS).
 * The geographic information used here is from the ONS's [OpenGeography Portal](http://geoportal.statistics.gov.uk).
-* This document is produced in [RMarkdown](http://rmarkdown.rstudio.com) using [`leaflet`](https://rstudio.github.io/leaflet/) and [`DT`](https://rstudio.github.io/DT/); it has been rendered into HTML using [`govdown`](https://ukgovdatascience.github.io/govdown/).
+* This document is produced in [RMarkdown](http://rmarkdown.rstudio.com) using [`leaflet`](https://rstudio.github.io/leaflet/), [`DT`](https://rstudio.github.io/DT/) and [`crosstalk`](https://rstudio.github.io/crosstalk/); it has been rendered into HTML using [`govdown`](https://ukgovdatascience.github.io/govdown/).
+* The code is available on [GitHub](https://www.github.com/co-analysis/csmapping/).
