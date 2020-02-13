@@ -221,10 +221,10 @@ $("div.checkbox").addClass("govuk-label");
 $("div#control-panel").addClass("govuk-label govuk-!-font-weight-bold");
 $("div#control-panel-intro>p.govuk-body").addClass("govuk-!-font-size-14");
 $("div#govgroup-text>p.govuk-body").addClass("govuk-!-font-size-14");
-
+$("div.form-group").addClass("govuk-body-s");
 
 mc_height = $("div.govuk-grid-column-two-thirds").height();
-cp_height = $("div.govuk-grid-column-two-thirds").height();
+cp_height = $("div#control-panel-box").height();
 
 if(cp_height < mc_height) {
   $("div#control-panel-box").height(mc_height);
