@@ -27,7 +27,8 @@ Please note that while the data these maps are based on are Official Statistics,
 The following map(s) are available from the 2019 Civil Service Statistics. These are based on the staff in post and their main working location as at 31 March 2019.
 
 * [Civil Servants by local area and the core cities](cs_lad_2019.html)
-* [Civil Servants by postcode and and organisation](cs_pc_2019.html) (experimental - still in development)
+* [Civil Servants by postcode and organisation](cs_pc_2019.html) (experimental - still in development)
+* [Civil Servants by postcode, grade and organisation](cs_pc_2019_grade.html) (experimental - still in development)
 
 ## 2018 maps
 The following map is available from the 2018 Civil Service Statistics (accessed via the [NOMIS API](https://www.nomisweb.co.uk/)). These are based on the staff in post and their main working location as at 31 March 2018.
