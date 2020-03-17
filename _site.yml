@@ -5,7 +5,7 @@ navbar: # links to include in the bar at the top of every page
 output:
   govdown::govdown_document:
     font: "sans-serif" # (default) or "new-transport"
-    favicon: "custom" # or "none" (default) or "govuk" see ?govdown_document
+    favicon: "none" # or "none" (default) or "govuk" see ?govdown_document
     logo: "images/uk_white_on_transparent.svg" # or false (default)
     logo_url: "https://co-analysis.github.io/csmapping/cs_lad_2019.html"
     logo_text: ""
