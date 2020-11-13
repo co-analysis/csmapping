@@ -17,7 +17,8 @@ library(kableExtra)
 
 cs18_lad <- read_csv("https://www.nomisweb.co.uk/api/v01/dataset/NM_129_1.data.csv?geography=1820327937...1820328307&date=latest&department=0&national_identity=0&gender=0&full_part_time=0&ethnic_group=0&disability_status=0&wage_band=0&civil_service_grade=0&age_band=0&measures=20100")
 
-spdf_lad <- geojson_read("https://opendata.arcgis.com/datasets/c7ccadc7024c4df58f9dfdc07c9acab5_0.geojson", what = "sp")
+spdf_lad <- geojson_read("https://opendata.arcgis.com/datasets/2c5b8eb836c7475ba3b305106ac9dfc3_0.geojson", what = "sp")
+
 
 lad_dt <- cs18_lad %>%
   select(geo_id = GEOGRAPHY_CODE, name = GEOGRAPHY_NAME, value = OBS_VALUE) %>%
@@ -25,7 +26,7 @@ lad_dt <- cs18_lad %>%
     value/430080),
     value = formattable::comma(value, digits = 0))
 
-lad_leaf <- sp::merge(spdf_lad, lad_dt, by.x = "LAD19CD", by.y = "geo_id")
+lad_leaf <- sp::merge(spdf_lad, lad_dt, by.x = "lad18cd", by.y = "geo_id")
 
 bincol <- colorBin("Purples",
                    lad_dt$value,
@@ -56,7 +57,7 @@ leaflet(lad_leaf, width = "100%", height = 500) %>%
   addPolygons(color = "#aaaaaa",
               weight = 1,
               fillColor = ~bincol(value),
-              popup = ~paste(LAD19NM, value, sep = ": "),
+              popup = ~paste(lad18nm, value, sep = ": "),
               fillOpacity = 0.8,
               options = pathOptions(pane = "dt")) %>%
   addProviderTiles(providers$CartoDB.PositronOnlyLabels, 
