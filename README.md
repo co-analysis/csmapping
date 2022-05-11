@@ -1,6 +1,12 @@
 # Mapping UK Civil Servants
 This repo is an R project that uses the [NOMIS API](https://www.nomisweb.co.uk/) and [`leaflet`](https://rstudio.github.io/leaflet/) R package to produce maps of UK civil servants.
 
+Note this requires a development version of [crosstalk](https://github.com/rstudio/crosstalk/tree/joe/feature/filter-select-default) that implements default selection, install via `{remotes}`.
+
+```r
+remotes::install_github("rstudio/crosstalk", ref = "joe/feature/filter-select-default")
+```
+
 ---
 
 #### Catalogue of maps:
